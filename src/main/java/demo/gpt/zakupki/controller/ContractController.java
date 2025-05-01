@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.InputStream;
 import java.util.Map;
 
 @Slf4j
@@ -25,14 +26,16 @@ public class ContractController {
 
     @SneakyThrows
     @GetMapping("/reg.number/{regNumber}")
-    public ResponseEntity<String> getContract(@PathVariable("regNumber") String regNumber) {
-
-
+    public ResponseEntity<String> getContractContent(@PathVariable("regNumber") String regNumber) {
         Map<String, String> contract = zakupkiService.getTextByContract(regNumber);
-        String url = zakupkiService.getContentUrl(contract);
+        InputStream content = zakupkiService.getContent(contract);
+        String text = zakupkiService.extractTextFromDocx(content);
 
-        return ResponseEntity.ok(url);
-
+        return ResponseEntity.ok(text);
     }
 
+    @GetMapping("/health")
+    public ResponseEntity<String> health() {
+        return ResponseEntity.ok(" Александр Зенин лучший it лидер и архитектор");
+    }
 }
